@@ -1,0 +1,93 @@
+All the queries must be run in the DL Query Tab of Protege Editor
+
+% Get soccer club whose manager is aged 71
+dbpedia-owl:SoccerClub that dbpedia-owl:managerClub some (foaf:Person and foaf:age value 71)
+
+'soccer:Manchester United F.C.'
+
+
+
+% Same query, only subclass used
+dbpedia-owl:SoccerClub that dbpedia-owl:managerClub some (soccer:SoccerManager and foaf:age value 71)
+
+'soccer:Manchester United F.C.'
+
+
+
+% We can get the club with the parameters of SoccerManager class such as foaf:name
+dbpedia-owl:SoccerClub that dbpedia-owl:managerClub some (soccer:SoccerManager that foaf:name value "Arsene Wenger")
+
+'soccer:Arsenal F.C.'
+
+
+% Or we can simply specify the resource name in the value
+dbpedia-owl:SoccerClub that dbpedia-owl:managerClub value 'soccer:Brian Kidd'
+
+'soccer:Manchester City F.C.'
+
+
+% We can move one level up and get the tournament for the club where we have manager named Brian Kidd, by using the entailments
+dbpedia-owl:SoccerTournament and soccer:club some (dbpedia-owl:SoccerClub and dbpedia-owl:managerClub value 'soccer:Brian Kidd')
+
+'soccer:English Premier League'
+
+
+
+% Soccer club where we have two managers named Brian Kidd and Roberto Mancini
+dbpedia-owl:SoccerClub that dbpedia-owl:managerClub value 'soccer:Brian Kidd' and   dbpedia-owl:managerClub value 'soccer:Roberto Mancini'
+
+'soccer:Manchester City F.C.'
+
+
+
+% Get persons who act as manager for Chelsea club using 'inverse' for complex querying
+foaf:Person that inverse dbpedia-owl:managerClub value 'soccer:Chelsea F.C.'
+
+'soccer:Roberto Di Matteo'
+'soccer:Rafael Benitez Maudes '
+
+
+% Get list of players who play in Forward position for Manchester United
+dbpedia-owl:SoccerPlayer that soccer:position value "Forward" and soccer:club value 'soccer:Manchester United F.C.'
+
+'soccer:Wayne Mark Rooney'
+'soccer:Javier Hernandez Balcazar'
+
+
+% Who are the goalkeepers
+dbpedia-owl:SoccerPlayer that soccer:position value "Goalkeeper"
+
+'soccer:Wojciech Szczesny'
+'soccer:Petr Cech'
+'soccer:Iker Casillas Fernandez'
+'soccer:David de Gea'
+'soccer:Gianluigi Buffon'
+'soccer:Joe Hart'
+
+
+
+% Complex query using 'inverse' for getting the goalkeepers of English Premier League since soccer:club is defined in SoccerTournament Individuals and here we move %backwards to get the clubs from the tournament.
+dbpedia-owl:SoccerPlayer that soccer:position value "Goalkeeper" and soccer:club some  (dbpedia-owl:SoccerClub that inverse soccer:club value 'soccer:English Premier League')
+
+'soccer:Wojciech Szczesny'
+'soccer:Petr Cech'
+'soccer:David de Gea'
+'soccer:Joe Hart'
+
+
+% Complex query using 'inverse' for getting goalkeepers of Euro 2012
+dbpedia-owl:SoccerPlayer that soccer:position value "Goalkeeper" and soccer:nationalTeam some  (dbpedia-owl:NationalSoccerClub that inverse soccer:nationalTeam value 'soccer:UEFA Euro 2012')
+
+'soccer:Iker Casillas Fernandez'
+'soccer:Gianluigi Buffon'
+
+
+% Players who played both for clubs and national team i.e. Euro 2012 and EPL. Please note that players from
+% England also played in both but since our KB contains Spain and Italy as stated earlier, players from Eng. don't show up.
+dbpedia-owl:SoccerPlayer that soccer:nationalTeam some  (dbpedia-owl:NationalSoccerClub that inverse soccer:nationalTeam value 'soccer:UEFA Euro 2012') and soccer:club some  (dbpedia-owl:SoccerClub that inverse soccer:club value 'soccer:English Premier League')
+
+'soccer:Fernando Torres'
+'soccer:Santi Cazorla'
+'soccer:Juan Manuel Mata Garcia'
+'soccer:David Silva'
+'soccer:Mario Balotelli'
